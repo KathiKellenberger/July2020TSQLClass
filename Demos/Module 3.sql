@@ -1,5 +1,9 @@
 --Module 3
 --Demo 1
+--Query to see the columns in a table
+SELECT  Col.TABLE_SCHEMA, Col.TABLE_NAME, Col.COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS AS Col
+WHERE Col.TABLE_SCHEMA = 'Person' AND Table_Name = 'Person';
 
 --=, <> , etc
 SELECT LastName
@@ -12,11 +16,23 @@ SELECT LastName
 FROM Person.Person 
 WHERE LastName <> 'Smith';
 
+--The names that start with Ca or greater show up
 SELECT LastName
 	,FirstName 
 FROM Person.Person 
 WHERE LastName > 'C';
 
+--Only names starting with A or B show up
+SELECT LastName
+	,FirstName 
+FROM Person.Person 
+WHERE LastName < 'C';
+
+/*
+C______ 
+Cabello
+
+*/
 
 SELECT LastName
 	,FirstName 
@@ -50,18 +66,25 @@ WHERE LastName LIKE '%s';
 SELECT LastName
 	,FirstName 
 FROM Person.Person 
-WHERE LastName LIKE '%bb%';
+WHERE LastName LIKE '%tt%';
 
 --in
 SELECT LastName, FirstName 
 FROM Person.Person 
 WHERE LastName IN ('Calafato','Caldwell');
 
+SELECT LastName, FirstName 
+FROM Person.Person 
+WHERE LastName = 'Calafato' OR LastName = 'Caldwell';
 
 --BETWEEN
 SELECT LastName, FirstName 
 FROM Person.Person 
 WHERE LastName BETWEEN 'A' AND 'C';
+
+SELECT LastName, FirstName 
+FROM Person.Person 
+WHERE LastName BETWEEN 'A' AND 'Cai';
 
 SELECT SalesOrderID 
 FROM Sales.SalesOrderHeader
@@ -70,11 +93,17 @@ WHERE SalesOrderID BETWEEN 75120 AND 75122;
 --NOT
 SELECT LastName, FirstName 
 FROM Person.Person 
+WHERE LastName BETWEEN 'B' AND 'C';
+
+SELECT LastName, FirstName 
+FROM Person.Person 
 WHERE LastName NOT BETWEEN 'B' AND 'C';
 
 SELECT LastName, FirstName 
 FROM Person.Person 
 WHERE LastName NOT IN ('Calafato','Caldwell');
+
+
 
 --AND OR
 SELECT LastName, FirstName 
@@ -104,6 +133,9 @@ FROM Person.Person
 WHERE LastName = 'Adams' 
 	AND (FirstName = 'Adam' OR FirstName = 'Aaron');
 
+print 10 + 2 * 7
+print (10 + 2) * 7
+
 --In this case, can also do this
 SELECT LastName, FirstName 
 FROM Person.Person 
@@ -113,8 +145,8 @@ WHERE LastName = 'Adams'
 --WHERE clause practice
 SELECT [AddressTypeID]       
 	,[Name]       
-FROM [Person].[AddressType]  
- 
+FROM [Person].[AddressType] 
+
 WHERE Name LIKE 'B%' 
 WHERE Name NOT LIKE 'B%' 
 WHERE Name LIKE '%B%' 
@@ -141,8 +173,8 @@ FROM Production.Product
 WHERE ListPrice > 0;
 
 --Nulls cancel everything out
-SELECT ProductID, Name, Color, Size, Style,
-	Color + '-' + Size + '-' + Style AS Description  
+SELECT ProductID, Name, Color, Size, Style
+,	Color + '-' + Size + '-' + Style AS Description  
 FROM Production.Product
 WHERE ListPrice > 0;
 
@@ -150,7 +182,7 @@ WHERE ListPrice > 0;
 --Nulls cancel everything out
 SELECT ProductID, Name, Color, Size, Style,
 	ISNULL(Color,'N/A') + '-' + 
-	ISNULL(Size,'N/A') + '-' + ISNULL(Style,'N/A') AS Description  
+	ISNULL(Size,'N/A') + '-' + ISNULL(Style,'N') AS Description  
 FROM Production.Product
 WHERE ListPrice > 0;
 
@@ -166,4 +198,44 @@ SELECT ProductID, Name, Style,Size,Color,
 	COALESCE(Style,Size,Color) AS Description  
 FROM Production.Product
 WHERE ListPrice > 0;
+
+--Filtering with NULL
+--504
+SELECT ProductID, Name, Color 
+FROM Production.Product;
+
+--26
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE Color = 'Blue';
+
+PRINT 504 - 26 --478
+--How many are not blue?
+--230
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE Color <> 'Blue';
+
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE Color != 'Blue';
+
+--478
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE Color <> 'Blue' OR Color IS NULL;
+
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE ISNULL(Color,'') <> 'Blue';
+
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE COALESCE(Color,'') <> 'Blue';
+
+--Find the products that have a color
+SELECT ProductID, Name, Color 
+FROM Production.Product
+WHERE Color IS NOT NULL;
+
 
