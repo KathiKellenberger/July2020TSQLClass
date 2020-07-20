@@ -33,6 +33,10 @@ SELECT BusinessEntityID, FirstName + ' ' + COALESCE(MiddleName,'') +
 	' ' + LastName AS [Full Name]    
 FROM Person.Person;  
 
+SELECT BusinessEntityID, FirstName +  COALESCE(' ' +MiddleName,'') +        
+	' ' + LastName AS [Full Name]    
+FROM Person.Person;  
+
 --Coalesce returns the first non-null
 SELECT COALESCE(NULL,NULL,'a','b',NULL,'c','d');
 
@@ -62,9 +66,12 @@ GO
 --Populate the table    
 INSERT INTO #trimExample (COL1)    
 VALUES ('a'),('b  '),('  c'),('  d  ');       
+
+SELECT * FROM #trimExample;
 --Select the values using the functions    
-SELECT COL1, '*' + RTRIM(COL1) + '*' AS "RTRIM",        
-	'*' + LTRIM(COL1) + '*' AS "LTRIM"    
+SELECT '*' + COL1 + '*', '*' + RTRIM(COL1) + '*' AS "RTRIM",        
+	'*' + LTRIM(COL1) + '*' AS "LTRIM", '*' + TRIM(COL1) + '*'  AS "TRIM",
+	'*' + LTRIM(RTRIM(COL1)) + '*'  AS "Nested TRIM"
 FROM #trimExample;       
 --Clean up    
 DROP TABLE #trimExample;  
@@ -123,12 +130,16 @@ WHERE BusinessEntityID IN (285,293,10314);
 --Nesting Functions 
 SELECT EmailAddress,        
 	SUBSTRING(EmailAddress,CHARINDEX('@',EmailAddress) + 1,50) AS DOMAIN    
-FROM Production.ProductReview;       
+FROM Production.ProductReview; 
+
+--Reverse 
+SELECT REVERSE(FirstName)
+FROM Person.Person
 
 --CONCAT
 SELECT CONCAT ('I ', 'love', ' writing', ' T-SQL') AS RESULT;       
 
-SELECT BusinessEntityID, CONCAT(FirstName, ' ', MiddleName,' ', LastName) AS [Full Name]    
+SELECT BusinessEntityID, CONCAT(FirstName, ' ' + MiddleName,' ', LastName) AS [Full Name]    
 FROM Person.Person; 
 
 SELECT CONCAT(BusinessEntityID,LastName) 

@@ -33,7 +33,8 @@ WHERE CurrencyRateID NOT IN
 SELECT CustomerID, C.StoreID, C.AccountNumber,
     (SELECT COUNT(*) 
      FROM Sales.SalesOrderHeader AS SOH
-     WHERE SOH.CustomerID = C.CustomerID) AS CountOfSales
+     WHERE SOH.CustomerID = C.CustomerID
+     ) AS CountOfSales
 FROM Sales.Customer AS C
 ORDER BY CountOfSales DESC;
  
@@ -56,13 +57,15 @@ ORDER BY CountOfSales DESC;
 --A derived table is treated like a table
 SELECT c.CustomerID, c.StoreID, c.AccountNumber, s.CountOfSales,
     s.SumOfTotalDue, s.AvgOfTotalDue
-FROM Sales.Customer AS c INNER JOIN
+FROM Sales.Customer AS c 
+INNER JOIN
     (SELECT CustomerID, COUNT(*) AS CountOfSales,
          SUM(TotalDue) AS SumOfTotalDue,
          AVG(TotalDue) AS AvgOfTotalDue
      FROM Sales.SalesOrderHeader
      GROUP BY CustomerID) AS s 
-ON c.CustomerID = s.CustomerID;
+ON c.CustomerID = s.CustomerID
+ORDER BY CountOfSales DESC;
 
 
 --Here's the same results, but with a CTE
@@ -74,8 +77,10 @@ WITH s AS
      GROUP BY CustomerID) 
 SELECT c.CustomerID, c.StoreID, c.AccountNumber, s.CountOfSales,
     s.SumOfTotalDue, s.AvgOfTotalDue
-FROM Sales.Customer AS c INNER JOIN s
-ON c.CustomerID = s.CustomerID;
+FROM Sales.Customer AS c 
+INNER JOIN s
+ON c.CustomerID = s.CustomerID
+ORDER BY COUntOfSales desc;
 
 --Create and populate a temp table
 USE tempdb;
