@@ -112,5 +112,25 @@ FROM Sales.SalesOrderHeader
 GROUP BY CustomerID    
 HAVING CustomerID > 27858;   
 
+/*
+Write query in this order:
+SELECT 
+FROM 
+WHERE
+GROUP BY 
+HAVING 
+ORDER BY
+
+SQL order of operations
+FROM 
+WHERE 
+GROUP BY 
+HAVING 
+SELECT 
+ORDER BY 
+
+*/
+
+
 
    

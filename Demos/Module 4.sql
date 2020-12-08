@@ -2,7 +2,8 @@
 --Demo 1
 SELECT 'ab' + 'c';     
 
-SELECT 1 + 1 AS ADDITION, 10.0 / 3 AS DIVISION, 10 / 3 AS [Integer Division], 10 % 3 AS MODULO;      
+SELECT 1 + 1 AS ADDITION, 10.0 / 3 AS DIVISION, 10 / 3 AS [Integer Division],
+ 10 % 3 AS MODULO;      
 
 
 SELECT BusinessEntityID, FirstName + ' ' + LastName AS [Full Name]    
@@ -29,13 +30,17 @@ SELECT BusinessEntityID, FirstName +  ISNULL(' ' +MiddleName,'') +
 FROM Person.Person;  
 
 --Use COALSECE 
-SELECT BusinessEntityID, FirstName + ' ' + COALESCE(MiddleName,'') +        
+SELECT BusinessEntityID, FirstName + COALESCE(' ' + MiddleName,'') +        
 	' ' + LastName AS [Full Name]    
 FROM Person.Person;  
 
 SELECT BusinessEntityID, FirstName +  COALESCE(' ' +MiddleName,'') +        
 	' ' + LastName AS [Full Name]    
 FROM Person.Person;  
+
+select style, size, color,
+	coalesce(style, size, color,'there are no descriptions')
+from production.product 
 
 --Coalesce returns the first non-null
 SELECT COALESCE(NULL,NULL,'a','b',NULL,'c','d');
@@ -51,14 +56,16 @@ SELECT CAST(BusinessEntityID AS VARCHAR(10)) + LastName
 FROM Person.Person;
 
 --Convert 
-SELECT CONVERT(VARCHAR(10), BusinessEntityID) + LastName 
+SELECT CONVERT(CHAR(10), BusinessEntityID) + LastName 
 FROM Person.Person;
 
 SELECT BusinessEntityID, BusinessEntityID + 1 AS "Adds 1",        
 	CAST(BusinessEntityID AS NVARCHAR(10)) + '1'AS "Appends 1"    
 FROM Person.Person; 
 
-
+--VAR = variable length
+--N = UNICODE which covers all possible characters
+-- no N = ASCI 255 character set
 
 --Demo 2
 CREATE TABLE #trimExample (COL1 VARCHAR(10));    
@@ -88,13 +95,16 @@ SELECT LastName,LEN(LastName) AS "Length",
 FROM Person.Person    
 WHERE BusinessEntityID IN (293,295,211,297,299,3057,15027); 
 
+
+
 --Using the CHARINDEX Function 
 SELECT LastName, CHARINDEX('e',LastName) AS "Find e",        
-	CHARINDEX('e',LastName,4) AS "Skip 4 Characters",        
+	CHARINDEX('e',LastName,4) AS "Skip 3 Characters",        
 	CHARINDEX('be',LastName) AS "Find be",        
 	CHARINDEX('Be',LastName) AS "Find Be"    
 FROM Person.Person    
-WHERE BusinessEntityID IN (293,295,211,297,299,3057,15027); 
+WHERE BusinessEntityID IN (293,295,211,297,299,3057,15027)
+ --and CHARINDEX('e',Lastname) > 0 ; 
 
 --Using the SUBSTRING Function 
 SELECT LastName, SUBSTRING(LastName,1,4) AS "First 4",        
@@ -128,18 +138,21 @@ WHERE BusinessEntityID IN (285,293,10314);
 
 
 --Nesting Functions 
+SELECT EmailAddress, CHARINDEX('@', EmailAddress) + 1
+FROM Production.productreview 
+
 SELECT EmailAddress,        
 	SUBSTRING(EmailAddress,CHARINDEX('@',EmailAddress) + 1,50) AS DOMAIN    
 FROM Production.ProductReview; 
 
 --Reverse 
-SELECT REVERSE(FirstName)
+SELECT FirstName, REVERSE(FirstName)
 FROM Person.Person
 
 --CONCAT
 SELECT CONCAT ('I ', 'love', ' writing', ' T-SQL') AS RESULT;       
 
-SELECT BusinessEntityID, CONCAT(FirstName, ' ' + MiddleName,' ', LastName) AS [Full Name]    
+SELECT BusinessEntityID,Middlename,  CONCAT(FirstName, ' ' + MiddleName,' ', LastName) AS [Full Name]    
 FROM Person.Person; 
 
 SELECT CONCAT(BusinessEntityID,LastName) 
@@ -193,9 +206,8 @@ WHERE SalesOrderID in (43659,43714,60621);
 
 --FORMAT Function Examples 
 DECLARE @d DATETIME = GETDATE();       
-SELECT FORMAT( @d, 'dd', 'en-US' ) AS Result;    
-SELECT FORMAT( @d, 'yyyy-M-d') AS Result;    
-SELECT FORMAT( @d, 'MM/dd/yyyy', 'en-US' ) AS Result;   
+SELECT FORMAT( @d, 'dd', 'en-US' ) AS Result1, 
+	FORMAT( @d, 'yyyy-M-d') AS Result2, FORMAT( @d, 'MM/dd/yyyy', 'en-US' ) AS Result;   
 
 
 -- DATEFROMPARTS Examples 

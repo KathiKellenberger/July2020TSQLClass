@@ -2,12 +2,15 @@
 
 --Demo 1
 --Joining Two Tables 
-SELECT * --31,465
-FROM Sales.SalesOrderHeader;
+SELECT top(100) * --31,465
+FROM Sales.SalesOrderHeader
+where SalesOrderID = 43659;
 
-SELECT * --121,317
-FROM Sales.SalesOrderDetail;
+SELECT TOP(100) * --121,317
+FROM Sales.SalesOrderDetail
+where SalesOrderID = 43659;
 
+select cast(31465 as bigint) * cast(121317 as bigint)
 
 SELECT s.SalesOrderID, s.OrderDate, s.TotalDue, d.SalesOrderDetailID,        
 	d.ProductID, d.OrderQty    
@@ -20,20 +23,21 @@ ON s.SalesOrderID = d.SalesOrderID;
 SELECT s.SalesOrderID, OrderDate, TotalDue, SalesOrderDetailID,        
 	d.ProductID, d.OrderQty    
 FROM Sales.SalesOrderHeader AS s    
-INNER JOIN Sales.SalesOrderDetail d 
-ON 1 = 1;   
+INNER JOIN Sales.SalesOrderDetail AS d 
+ON s.SalesOrderID = s.SalesOrderID  
 
 --Wrong results!
-SELECT s.SalesOrderID, OrderDate, TotalDue, SalesOrderDetailID,        
+SELECT s.SalesOrderID, s.OrderDate, s.TotalDue, d.SalesOrderDetailID,        
 	d.ProductID, d.OrderQty    
 FROM Sales.SalesOrderHeader AS s    
-INNER JOIN Sales.SalesOrderDetail d 
-ON s.SalesOrderID = d.SalesOrderDetailID;  
+INNER JOIN Sales.SalesOrderDetail AS d 
+ON s.SalesOrderID = d.SalesOrderDetailID
+where s.SalesOrderID = 43659;  
 
-SELECT s.SalesOrderID, OrderDate, TotalDue, SalesOrderDetailID,        
+SELECT s.SalesOrderID, s.OrderDate, s.TotalDue, d.SalesOrderDetailID,        
 	d.ProductID, d.OrderQty    
 FROM Sales.SalesOrderHeader AS s    
-INNER JOIN Sales.SalesOrderDetail d 
+INNER JOIN Sales.SalesOrderDetail AS d 
 ON s.SalesOrderID = d.OrderQty;  
 
 
@@ -42,6 +46,7 @@ ON s.SalesOrderID = d.OrderQty;
 SELECT c.CustomerID, c.PersonID, p.BusinessEntityID, p.LastName    
 FROM Sales.Customer AS c    
 INNER JOIN Person.Person AS p ON c.PersonID = p.BusinessEntityID;   
+
 
 SELECT * FROM Sales.SpecialOfferProduct
 order by ProductID 
@@ -68,8 +73,8 @@ ORDER BY soh.SalesOrderID;
 
 --Demo 2 OUTER JOIN
 --Using LEFT OUTER JOIN 
-SELECT * FROM Sales.Customer;
-SELECT * FROM Sales.SalesOrderHeader
+SELECT top(100) * FROM Sales.Customer;
+SELECT top(100) * FROM Sales.SalesOrderHeader;
 
 --32,166
 SELECT c.CustomerID, C.AccountNumber, S.SalesOrderID, s.OrderDate    
@@ -157,4 +162,4 @@ SELECT c.CustomerID, s.SalesOrderID, s.OrderDate
 FROM Sales.Customer AS c    
 LEFT OUTER JOIN Sales.SalesOrderHeader AS s ON c.CustomerID = s.CustomerID    
 	AND S.OrderDate BETWEEN '2011-07-01' AND '2011-07-31'
-ORDER BY s.SalesOrderID;  
+ORDER BY s.SalesOrderID DESC;  

@@ -24,6 +24,13 @@ SELECT Pers.FirstName AS [First Name]
 	, Pers.ModifiedDate
 FROM Person.Person AS Pers;
 
+SELECT Person.person.FirstName AS [First Name]
+	, Person.Person.LastName AS "Last Name"
+	, 'A literal string' AS AString
+	, Person.Person.PersonType
+	, Person.Person.ModifiedDate
+FROM Person.Person ;
+
 --Top 
 SELECT TOP(50) PERCENT DepartmentID, Name FROM HumanResources.Department;
 
@@ -31,6 +38,9 @@ SELECT TOP(3) DepartmentID, Name
 FROM HumanResources.Department;
 
 --Distinct 
+
+SELECT Color 
+FROM Production.Product;
 SELECT DISTINCT Color 
 FROM Production.Product;
 
@@ -42,16 +52,22 @@ ORDER BY LocationID;
  
 SELECT ProductID, LocationID
 FROM Production.ProductInventory
-ORDER BY ProductID, LocationID DESC;
+ORDER BY ProductID DESC, LocationID DESC;
 
 SELECT Pers.FirstName AS [First Name]
 	, Pers.LastName AS "Last Name"
 FROM Person.Person AS Pers
 ORDER BY [First Name];
- 
+
+
+
 SELECT BusinessEntityID, LastName, FirstName, MiddleName
 FROM Person.Person 
-ORDER BY LastName DESC, FirstName DESC, MiddleName DESC;
+ORDER BY LastName DESC, FirstName DESC, MiddleName DESC, BusinessEntityID DESC;
+
+SELECT BusinessEntityID, LastName, FirstName, MiddleName
+FROM Person.Person 
+ORDER BY LastName , FirstName , MiddleName, BusinessEntityID ;
 
 
 
